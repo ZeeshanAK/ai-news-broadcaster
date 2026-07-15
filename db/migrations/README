@@ -1,0 +1,11 @@
+# Database migrations configuration
+# This directory contains Alembic migration files
+
+# To create a new migration:
+# alembic revision --autogenerate -m "Description of changes"
+
+# To apply migrations:
+# alembic upgrade head
+
+# To revert to previous revision:
+# alembic downgrade -1
