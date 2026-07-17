@@ -12,7 +12,7 @@ A fully autonomous AI-powered news aggregation and broadcasting system that fetc
 - **Web dashboard**: Monitor sources, articles, summaries, and broadcasts through a React frontend
 - **Full REST API**: Complete FastAPI backend for programmatic access
 
-## Tech Stack
+## Technology Stack
 
 ### Backend
 - **FastAPI** — Modern async Python web framework
@@ -35,7 +35,37 @@ A fully autonomous AI-powered news aggregation and broadcasting system that fetc
 - **GitHub Actions** — CI/CD pipeline
 - **SQLite** (dev) / PostgreSQL (prod) — Database
 
-## Project Structure
+## Project Architecture
+
+```mermaid
+graph TD
+    A[Ingestion] --> B[Pipeline]
+    B --> C[Delivery]
+    C --> D[Telegram]
+    B --> E[Database]
+    E --> F[FastAPI]
+    F --> G[React UI]
+    
+    style A fill:#e1f5fe
+    style B fill:#f3e5f5
+    style C fill:#e8f5e9
+    style D fill:#fff3e0
+    style E fill:#fce4ec
+    style F fill:#f1f8e9
+    style G fill:#fff8e1
+```
+
+### Backend Architecture
+
+The backend follows a modular architecture with clear separation of concerns:
+
+- **Ingestion Layer**: Fetches news from various sources (RSS feeds, APIs)
+- **Pipeline Layer**: Processes articles through filtering, summarization, and deduplication
+- **Delivery Layer**: Converts summaries to audio and sends via Telegram
+- **Database Layer**: Stores all application data using SQLAlchemy ORM
+- **API Layer**: Exposes REST endpoints for frontend and external access
+
+### Directory Structure
 
 ```
 ai-news-broadcaster/
@@ -48,6 +78,143 @@ ai-news-broadcaster/
 │   │   └── main.py             # App entrypoint
 │   ├── requirements.txt
 │   └── tests/
+├── frontend/                    # React UI
+│   ├── src/
+│   │   ├── components/         # Reusable UI components
+│   │   ├── pages/              # Page-level components
+│   │   ├── api/                # API client
+│   │   └── main.jsx            # App entrypoint
+│   ├── index.html
+│   └── package.json
+├── services/                    # Business logic modules
+│   ├── ingestion/              # Data fetching
+│   ├── pipeline/               # LLM processing
+│   ├── audio/                  # Text-to-speech
+│   ├── delivery/               # Telegram delivery
+│   └── scheduling/             # Job scheduling
+├── db/                          # Database models and migrations
+│   ├── models/                 # SQLAlchemy models
+│   ├── migrations/             # Alembic migrations
+│   └── session.py              # Database session handling
+├── .env.example                 # Environment variables example
+├── .gitignore                   # Git ignore patterns
+└── README.md                    # This file
+```
+
+## How to Run Locally
+
+### Prerequisites
+- Python 3.9+
+- Node.js 16+
+- Docker (optional, for containerized deployment)
+
+### Backend Setup
+1. Clone the repository
+2. Create a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+3. Install dependencies:
+   ```bash
+   pip install -r backend/requirements.txt
+   ```
+4. Set up the database:
+   ```bash
+   cd db
+   alembic upgrade head
+   ```
+5. Create a `.env` file from the example:
+   ```bash
+   cp .env.example .env
+   ```
+6. Run the FastAPI server:
+   ```bash
+   cd backend
+   uvicorn app.main:app --reload
+   ```
+
+### Frontend Setup
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+## Configuration
+
+The application uses environment variables for configuration. Create a `.env` file with the following variables:
+
+```env
+# Database
+DATABASE_URL=sqlite:///./db.sqlite3
+
+# API Settings
+PROJECT_NAME=AI News Broadcaster
+VERSION=1.0.0
+API_V1_STR=/api/v1
+
+# LLM Settings
+OPENAI_API_KEY=your_openai_key
+GROQ_API_KEY=your_groq_key
+GEMINI_API_KEY=your_gemini_key
+
+# Telegram Settings
+TELEGRAM_BOT_TOKEN=your_telegram_bot_token
+TELEGRAM_CHAT_ID=your_chat_id
+
+# Scheduler Settings
+SCHEDULE_TIME=09:00
+```
+
+## Future Enhancements
+
+- [ ] User preference settings (topics to include/exclude)
+- [ ] Historical archive + search functionality
+- [ ] Multiple delivery channels (email, Discord)
+- [ ] Analytics on which stories get read
+- [ ] Improved LLM model selection and management
+- [ ] Enhanced UI with more interactive features
+- [ ] Support for additional news sources
+- [ ] Advanced filtering based on user preferences
+- [ ] Integration with more TTS services
+
+## Contribution Guidelines
+
+We welcome contributions to the AI News Broadcaster project! Here are some guidelines:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Code Style
+- Follow PEP 8 for Python code
+- Use TypeScript for React components
+- Write clear, descriptive commit messages
+- Include documentation for new features
+
+### Testing
+- Add unit tests for new functionality
+- Ensure all existing tests pass before submitting PRs
+- Test both backend and frontend components
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Thanks to all contributors who have helped build this project
+- Special thanks to the open-source community for providing excellent libraries and tools
 ├── frontend/                    # React + Vite application
 │   ├── src/
 │   │   ├── components/         # React components
