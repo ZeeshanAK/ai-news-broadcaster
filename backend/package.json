@@ -1,0 +1,24 @@
+{
+  "name": "ai-news-broadcaster-api",
+  "version": "1.0.0",
+  "description": "Backend API for AI News Broadcaster application",
+  "main": "server.js",
+  "scripts": {
+    "start": "uvicorn app.main:app --host 0.0.0.0 --port 3001 --reload",
+    "dev": "uvicorn app.main:app --host 0.0.0.0 --port 3001 --reload"
+  },
+  "keywords": [
+    "ai",
+    "news",
+    "broadcaster",
+    "api"
+  ],
+  "author": "AI News Broadcaster Team",
+  "license": "MIT",
+  "dependencies": {
+    "python": "^3.0.0"
+  },
+  "devDependencies": {
+    "pytest": "^8.0.0"
+  }
+}

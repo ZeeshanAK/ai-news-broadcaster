@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import datetime
@@ -8,6 +8,7 @@ from app.models.broadcast import Broadcast, BroadcastStatus
 from app.schemas import (
     BroadcastCreate, BroadcastUpdate, BroadcastResponse, PaginatedResponse
 )
+from app.services.audio_storage import audio_storage_service
 
 router = APIRouter(prefix="/broadcasts", tags=["broadcasts"])
 
@@ -58,6 +59,29 @@ def update_broadcast(broadcast_id: int, broadcast: BroadcastUpdate, db: Session 
     for key, value in broadcast.model_dump(exclude_unset=True).items():
         setattr(db_broadcast, key, value)
     db_broadcast.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(db_broadcast)
+    return db_broadcast
+
+
+@router.post("/{broadcast_id}/audio", response_model=BroadcastResponse)
+async def upload_audio(
+    broadcast_id: int,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db)
+):
+    # Get the broadcast
+    db_broadcast = db.query(Broadcast).filter(Broadcast.id == broadcast_id).first()
+    if not db_broadcast:
+        raise HTTPException(status_code=404, detail="Broadcast not found")
+    
+    # Save audio file
+    audio_url = await audio_storage_service.save_audio_file(file, broadcast_id)
+    
+    # Update broadcast with audio URL
+    db_broadcast.audio_url = audio_url
+    db_broadcast.status = BroadcastStatus.READY
+    
     db.commit()
     db.refresh(db_broadcast)
     return db_broadcast

@@ -444,7 +444,7 @@ function AuthView({ onComplete, onBack }: {
               <div>
                 <label className="text-xs text-muted-foreground block mb-1">Full name</label>
                 <input
-                  type="text" placeholder="Alex Chen" value={name}
+                  type="text" placeholder="Zeeshan Ahmed" value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full bg-secondary border border-border rounded-lg px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 />
@@ -730,7 +730,7 @@ function Dashboard({ prefs, registered, onSelectArticle, onSettings, onRegister 
           <div className="mb-8 rounded-xl border border-teal-400/15 bg-teal-400/5 px-6 py-4 flex items-center justify-between gap-4">
             <div>
               <p className="text-sm text-foreground font-medium mb-0.5">Get broadcasts delivered to you</p>
-              <p className="text-xs text-muted-foreground">Register to receive morning, noon, and evening AI news via SMS — with audio.</p>
+              <p className="text-xs text-muted-foreground">Register to receive morning, noon, and evening AI news via Telegram — with audio.</p>
             </div>
             <button
               onClick={onRegister}

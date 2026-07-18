@@ -28,6 +28,12 @@ class Broadcast(Base):
     status = Column(SQLEnum(BroadcastStatus), default=BroadcastStatus.PENDING, nullable=False, index=True)
     error_message = Column(Text, nullable=True)
     published_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationship
+    article = relationship("Article", back_populates="broadcasts")
+    summary = relationship("Summary", back_populates="broadcasts")
+    created_at = Column(DateTime, default=datetime.utcnow)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 

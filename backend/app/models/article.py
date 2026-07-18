@@ -29,6 +29,7 @@ class Article(Base):
     fetched_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     status = Column(SQLEnum(ArticleStatus), default=ArticleStatus.NEW, nullable=False, index=True)
     language = Column(String(10), default="en", nullable=False)
+    is_processed = Column(Boolean, default=False)
     
     source = relationship("Source", back_populates="articles")
     summaries = relationship("Summary", back_populates="article", cascade="all, delete-orphan")
